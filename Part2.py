@@ -1,4 +1,4 @@
-import itertools
+from sys import argv
 
 from NW_Part1 import Alignment
 
@@ -28,6 +28,7 @@ array of score relating to each sequence found within one of the files in ./sequ
 # # a.score_alignment provides a float score for X and Y alignment
 # print("Score of alignment: " + str(a.score_alignment()))
 
+
 def score_alignment(seq_a, seq_b):
     agnmt = Alignment(seq_a, seq_b)
     agnmt.compute_alignment()
@@ -36,13 +37,12 @@ def score_alignment(seq_a, seq_b):
 
 def pretty_print_matrix(mat):
     print("[")
-    for row in matrix:
+    for row in mat:
         print(row, end=",\n")
     print("]", end="")
 
 
-if __name__ == "__main__":
-    filename = "sequences/multiple3.txt"
+def score_pairs_from_file(filename):
     print("Computing output for file " + filename)
     with open(filename, "r") as file:
         contents = file.readlines()
@@ -50,14 +50,22 @@ if __name__ == "__main__":
     reported_len = contents[0].strip()
     sequences = [seq.strip() for seq in contents[1:]]
     print("Found {0} sequences. Reports {1} sequences.".format(len(sequences), reported_len))
-    print("Sequences: {}".format(sequences))
-
-    pairs = itertools.combinations(sequences, 2)
-    copies = [(a, a) for a in sequences]
-    print("Pairs:")
-    print({pair: score_alignment(*pair) for pair in pairs})
-    print("Copies:")
-    print({copy: score_alignment(*copy) for copy in copies})
+    # print("Sequences: {}".format(sequences))
+    
+    # Checking that the output is valid
+    # pairs = itertools.combinations(sequences, 2)
+    # copies = [(a, a) for a in sequences]
+    # print("Pairs:")
+    # print({pair: score_alignment(*pair) for pair in pairs})
+    # print("Copies:")
+    # print({copy: score_alignment(*copy) for copy in copies})
 
     matrix = [[score_alignment(i, j) for j in sequences] for i in sequences]
     pretty_print_matrix(matrix)
+
+if __name__ == "__main__":
+    if len(argv) < 2:
+        print("Usage: Part2.py <filename>")
+    else:
+        score_pairs_from_file(argv[1])
+
