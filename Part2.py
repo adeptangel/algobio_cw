@@ -36,10 +36,11 @@ def score_alignment(seq_a, seq_b):
 
 
 def pretty_print_matrix(mat):
-    print("[")
+    output = "["
     for row in mat:
-        print(row, end=",\n")
-    print("]", end="")
+        output = output + str(row) + ",\n"
+    output += "]"
+    return output
 
 
 def score_pairs_from_file(filename):
@@ -61,7 +62,7 @@ def score_pairs_from_file(filename):
     # print({copy: score_alignment(*copy) for copy in copies})
 
     matrix = [[score_alignment(i, j) for j in sequences] for i in sequences]
-    pretty_print_matrix(matrix)
+    print(pretty_print_matrix(matrix))
 
 if __name__ == "__main__":
     if len(argv) < 2:
