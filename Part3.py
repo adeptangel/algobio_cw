@@ -47,23 +47,38 @@ def compute_distances_from_file(filename):
 
 
 def make_cluster(distances):
-    """Agglomerative clustering function. Expects a distance matrix as input."""
+    """
+    Agglomerative clustering function. Expects a distance matrix as input.
+    Returns the AgglomerativeClustering object.
+    """
     print("Clustering...")
 
-    model = AgglomerativeClustering(linkage="average", metric="precomputed", distance_threshold=None)
-    cluster = model.fit(distances)
+    cluster = AgglomerativeClustering(linkage="average", metric="precomputed", distance_threshold=None)
+    cluster.fit(distances)
     # model is a reference to the same object as cluster
-    print("enumerate:", list(enumerate(cluster.children_)))
-    print("cluster.labels_:", cluster.labels_)
-    next_node = len(cluster.labels_)
-    for i, merge in enumerate(cluster.children_):
-        print("Align {} with {} to give {}".format(merge[0], merge[1], next_node))
-        next_node += 1
+    # print("enumerate:", list(enumerate(cluster.children_)))
+    # print("cluster.labels_:", cluster.labels_)
+    # next_node = len(cluster.labels_)
+    # for i, merge in enumerate(cluster.children_):
+    #     print("Align {} with {} to give {}".format(merge[0], merge[1], next_node))
+    #     next_node += 1
     print("Done.")
     return cluster
+
+
+def align_from_clustering(cluster: AgglomerativeClustering, sequences: list):
+    """Follow the guide tree produced by a clustering to align several sequences."""
+    # Clustering isn't associated with list elements so we need to find the correct
+    # mapping from list elements to their cluster nodes
+    # named_sequences: dict = enumerate(sequences)
+    
+    for merger in cluster:
+        # merger always has two elements
+        
 
 
 if __name__ == "__main__":
     distance_matrix = compute_distances_from_file("sequences/multiple3.txt")
     print("Python distance matrix: {}".format(pretty_print_matrix(distance_matrix)))
     cluster = make_cluster(distance_matrix)
+    alignment_guide(cluster)
