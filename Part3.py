@@ -1,4 +1,5 @@
 from math import log
+from sys import argv
 
 from sklearn.cluster import AgglomerativeClustering
 
@@ -45,7 +46,9 @@ def read_seqs(filename):
     
 
 def compute_distances(sequences):
+    print("Computing Kimura distances...")
     matrix = [[kimura_dist(i, j) for j in sequences] for i in sequences]
+    print("Done.")
     return matrix
 
 
@@ -71,6 +74,7 @@ def make_cluster(distances):
 
 def align_from_clustering(cluster: AgglomerativeClustering, sequences: list):
     """Follow the guide tree produced by a clustering to align several sequences."""
+    print("Performing multiple alignment from guide tree...")
     align = MultipleAlignment()
 
     for merger in cluster.children_:
@@ -80,13 +84,24 @@ def align_from_clustering(cluster: AgglomerativeClustering, sequences: list):
         # This enables sequence index access to the profiles
         sequences.append(profile)
 
+    print("Done.")
     # Last elements of sequences is always the final alignment profile
     return sequences[-1]
 
 
 if __name__ == "__main__":
-    sequences = read_seqs("sequences/multiple3.txt")
-    distance_matrix = compute_distances(sequences)
-    print("Python distance matrix: {}".format(pretty_print_matrix(distance_matrix)))
-    cluster = make_cluster(distance_matrix)
-    print(align_from_clustering(cluster, sequences))
+    if len(argv) < 2:
+        print("Usage: Part3.py <filename>")
+    else:
+        sequences: list = read_seqs(argv[1])
+        distance_matrix = compute_distances(sequences)
+        # print("Python distance matrix: {}".format(pretty_print_matrix(distance_matrix)))
+        cluster = make_cluster(distance_matrix)
+        final_alignment: list = align_from_clustering(cluster, sequences)
+        print("Final alignment: {}".format(final_alignment))
+        # Score alignment
+        m_align = MultipleAlignment()
+        print("Scoring multiple alignment...")
+        score: float = m_align.scoreMultipleAlignment(final_alignment)
+        print("Done.")
+        print("Score: {}".format(score))
