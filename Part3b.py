@@ -11,8 +11,8 @@ def align_by_nearest():
     # Ignore numbers along the diagonal of the matrix because they will always be zero
     minimum_dist = distance_matrix[0][1]
     minimum_dist_index = (0, 1)
+    diagonal_index = 0
     for row in distance_matrix:
-        diagonal_index = 0
         for item in row:
             if row.index(item) == diagonal_index:
                 continue
@@ -29,10 +29,14 @@ def align_by_nearest():
     # Repeat until all the sequences have been aligned
     while len(aligned_indices) < len(sequences):
         # Find the average distance of each sequence from the sequences already aligned
-        # Make a virtual row based on the average of rows for sequences in the alignment
-        average_distances = [statistics.mean([row[col] for row in distance_matrix])
+        # Extract from distance_matrix only the rows which correspond to already-aligned sequences
+        aligned_rows = list(filter(lambda el: distance_matrix.index(el) in aligned_indices,
+            distance_matrix))
+        # Take the mean column value across the rows to produce a single "average distance" virtual row
+        average_distances = [statistics.mean([row[col] for row in aligned_rows])
                 for col in range(len(distance_matrix))]
-        # Choose the sequence from this row which has the lowest distance but isn't already in the alignment
+        # Choose the sequence from this row which has the lowest distance but isn't already
+        # in the alignment
         minimum_new_distance = min(filter(lambda el: average_distances.index(el) not in aligned_indices,
             average_distances))
         # We are only interested in which sequence this distance corresponds to

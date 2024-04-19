@@ -86,7 +86,7 @@ def align_from_clustering(cluster: AgglomerativeClustering, sequences: list):
         sequences.append(profile)
 
     print("Done.")
-    # Last elements of sequences is always the final alignment profile
+    # Last element of sequences will be the final alignment profile
     return sequences[-1]
 
 
