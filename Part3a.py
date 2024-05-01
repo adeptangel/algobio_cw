@@ -26,6 +26,8 @@ def kimura_dist(a, b):
             n_nogap += 1
     
     # Calculate the number of columns where both residues are identical
+    # This would count columns with two gaps but that doesen't matter because
+    # with an alignment of two sequences, there will never be columns with only gaps
     n_identical = 0
     for i in range(len(align.xa)):
         if align.xa[i] == align.ya[i]:
@@ -99,7 +101,7 @@ def one_per_line(seq):
 
 if __name__ == "__main__":
     if len(argv) < 2:
-        print("Usage: Part3.py <filename>")
+        print("Usage: Part3a.py <filename>")
     else:
         sequences: list = read_seqs(argv[1])
         distance_matrix = compute_distances(sequences)

@@ -1,7 +1,7 @@
 from sys import argv
 import statistics
 
-from Part3 import read_seqs, compute_distances, one_per_line
+from Part3a import read_seqs, compute_distances, one_per_line
 from multiple_sequence_alignment import MultipleAlignment
 
 
